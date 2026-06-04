@@ -1,0 +1,260 @@
+/* ═══════════════════════════════════════════════════════
+   NAVBAR — PetDate
+   Fuente de referencia: Georgia serif (igual que Café Sirope)
+   Logo: Aclonica (se mantiene)
+   ═══════════════════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Jost:wght@400;500;600;700&display=swap');
+
+/* ── Base ── */
+.petdate-nav {
+  height: 64px;
+  transition: background-color 0.35s ease,
+              box-shadow       0.35s ease,
+              backdrop-filter  0.35s ease;
+  z-index: 40;
+}
+
+/* Transparente — sobre el collage del hero */
+.petdate-nav--transparent {
+  background-color: transparent;
+  box-shadow: none;
+  /* sutil backdrop para que los links sean legibles sobre el collage */
+  backdrop-filter: none;
+}
+
+/* Sólido — al hacer scroll o en páginas internas */
+.petdate-nav--solid {
+  background-color: #ffffff;
+  box-shadow: 0 1px 8px rgba(46, 31, 20, 0.08);
+}
+
+/* ── Brand logo ── */
+.brand-logo {
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Brand text "PetDate" ── */
+.brand-text {
+  font-family: 'Aclonica', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333333;
+  /* Transición de aparición al hacer scroll */
+  opacity: 1;
+  transform: translateX(0);
+  max-width: 120px;
+  overflow: hidden;
+  transition: opacity 0.35s ease,
+              max-width 0.35s ease,
+              transform 0.35s ease;
+  white-space: nowrap;
+}
+
+/* Oculto en home antes de scroll */
+.brand-text--hidden {
+  opacity: 0;
+  max-width: 0;
+  transform: translateX(-8px);
+}
+
+/* Color del brand-text cuando el nav es transparente
+   (solo el logo, el texto está oculto, pero por si acaso) */
+.petdate-nav--transparent .brand-text {
+  color: #ffffff;
+}
+
+.petdate-nav--solid .brand-text {
+  color: #333333;
+}
+
+/* ── Links de navegación ── */
+/* Fuente: Jost para links del navbar */
+.nav-link-custom {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  transition: color 0.2s ease;
+}
+
+/* Sobre fondo transparente: links blancos */
+.petdate-nav--transparent .nav-link-custom {
+  color: #ffffff !important;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.35);
+}
+
+/* Sobre fondo blanco: links oscuros */
+.petdate-nav--solid .nav-link-custom {
+  color: #333333 !important;
+}
+
+.nav-link-custom:hover {
+  color: #9479a8 !important;
+  text-shadow: none !important;
+}
+
+/* ── Botones ── */
+.btn-login,
+.btn-register,
+.btn-logout {
+  font-family: 'Jost', sans-serif;
+  font-size: 0.82rem;
+  border: 2px solid #7e6492;
+  border-radius: 8px;
+  padding: 5px 16px;
+  font-weight: 400;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background-color 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+/* Transparente: botones en blanco */
+.petdate-nav--transparent .btn-login,
+.petdate-nav--transparent .btn-register,
+.petdate-nav--transparent .btn-logout {
+  color: #ffffff;
+  border-color: rgba(255,255,255,0.75);
+  background-color: transparent;
+}
+
+.petdate-nav--transparent .btn-login:hover,
+.petdate-nav--transparent .btn-register:hover,
+.petdate-nav--transparent .btn-logout:hover {
+  background-color: rgba(255,255,255,0.18);
+  border-color: #ffffff;
+  color: #ffffff;
+}
+
+/* Sólido: botones lila */
+.petdate-nav--solid .btn-login,
+.petdate-nav--solid .btn-register,
+.petdate-nav--solid .btn-logout {
+  color: #7e6492;
+  border-color: #7e6492;
+  background-color: transparent;
+}
+
+.petdate-nav--solid .btn-login:hover,
+.petdate-nav--solid .btn-register:hover,
+.petdate-nav--solid .btn-logout:hover {
+  background-color: #7e6492;
+  color: #ffffff;
+}
+
+/* Saludo */
+.navbar-greeting {
+  font-family: 'Georgia', serif;
+  font-size: 0.88rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.petdate-nav--transparent .navbar-greeting { color: #ffffff; text-shadow: 0 1px 3px rgba(0,0,0,0.4); }
+.petdate-nav--solid .navbar-greeting       { color: #7e6492; }
+
+/* ── Hamburguesa mobile ── */
+.navbar-toggler {
+  background: transparent;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.hamburger-line {
+  display: block;
+  width: 22px;
+  height: 1.5px;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.petdate-nav--transparent .hamburger-line { background-color: #ffffff; }
+.petdate-nav--solid       .hamburger-line { background-color: #333333; }
+
+/* ── Overlay ── */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background-color: rgba(61, 43, 31, 0.40);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+
+/* ── Drawer lateral mobile ── */
+.mobile-drawer {
+  position: fixed;
+  top: 0; right: 0; bottom: 0;
+  z-index: 50;
+  width: 280px;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.25s ease-in-out;
+}
+
+.mobile-drawer--open {
+  transform: translateX(0);
+}
+
+.mobile-drawer__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  height: 64px;
+  border-bottom: 1px solid #ede8e3;
+}
+
+.drawer-close {
+  background: transparent;
+  border: none;
+  color: #7a6e66;
+  cursor: pointer;
+  padding: 8px;
+  line-height: 0;
+  transition: color 0.2s;
+}
+
+.drawer-close:hover { color: #333; }
+
+.mobile-drawer__nav {
+  flex: 1;
+  padding: 32px 24px;
+}
+
+.mobile-drawer__nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.mobile-drawer__link {
+  font-family: 'Jost', sans-serif;
+  font-size: 1rem;
+  color: #333333;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.mobile-drawer__link:hover { color: #7e6492; }
+
+.mobile-drawer__footer {
+  padding: 0 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}

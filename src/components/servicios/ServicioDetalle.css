@@ -1,0 +1,258 @@
+/* Wrapper general */
+.detalle-wrapper {
+  padding-top: 86px;
+  padding-bottom: 64px;
+  padding-left: 40px;
+  padding-right: 40px;
+  background: #f9f6fd;
+  min-height: 100vh;
+}
+
+/* Breadcrumb */
+.detalle-breadcrumb {
+  margin-bottom: 24px;
+}
+
+.detalle-breadcrumb__link {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #7e6492;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.detalle-breadcrumb__link:hover {
+  color: #5f4c72;
+  text-decoration: underline;
+}
+
+/* Layout dividido */
+.detalle-layout {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  gap: 32px;
+  max-width: 1100px;
+  align-items: start;
+}
+
+/* ── Panel izquierdo ── */
+.detalle-info {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.detalle-info__top {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 28px 28px 20px;
+  border-top: 5px solid #7e6492;
+}
+
+.detalle-info__icono {
+  font-size: 3rem;
+  flex-shrink: 0;
+}
+
+.detalle-info__badge {
+  display: inline-block;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 3px 12px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04rem;
+  margin-bottom: 6px;
+}
+
+.detalle-info__nombre {
+  font-size: 1.7rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.detalle-info__desc {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.75;
+  margin: 0;
+  padding: 0 28px 24px;
+  border-bottom: 1px solid #f0ebf8;
+}
+
+/* Lista de datos */
+.detalle-info__lista {
+  list-style: none;
+  margin: 0;
+  padding: 20px 28px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.detalle-info__lista li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.detalle-info__lista-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.detalle-info__lista-label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #aaa;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+  margin-bottom: 2px;
+}
+
+.detalle-info__lista-valor {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.detalle-info__lista-link {
+  font-size: 0.95rem;
+  color: #7e6492;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.15s;
+}
+
+.detalle-info__lista-link:hover {
+  color: #5f4c72;
+  text-decoration: underline;
+}
+
+.detalle-info__lista-link--wsp {
+  color: #25d366;
+}
+
+.detalle-info__lista-link--wsp:hover {
+  color: #1da851;
+}
+
+/* ── Panel derecho: promociones ── */
+.detalle-promos {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  position: sticky;
+  top: 90px;
+}
+
+.detalle-promos__title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.detalle-promos__count {
+  background: #7e6492;
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 20px;
+}
+
+/* Empty state promos */
+.detalle-promos__empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 32px 0;
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+.detalle-promos__empty-icon {
+  font-size: 2.5rem;
+}
+
+/* Lista de promos */
+.detalle-promos__lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.promo-detalle {
+  border-left: 4px solid #7e6492;
+  background: #f9f6fd;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.promo-detalle__titulo {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.promo-detalle__desc {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Not found */
+.detalle-notfound {
+  padding-top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #aaa;
+  font-size: 1.1rem;
+}
+
+.detalle-back {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #7e6492;
+  text-decoration: none;
+}
+
+.detalle-back:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .detalle-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .detalle-promos {
+    position: static;
+  }
+
+  .detalle-wrapper {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+}

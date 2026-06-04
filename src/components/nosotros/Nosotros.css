@@ -1,0 +1,168 @@
+/* Hero */
+.nosotros-hero {
+  padding-top: 70px;
+  min-height: 220px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f5f0fa 0%, #eaf4f8 100%);
+  text-align: center;
+}
+
+.nosotros-hero__content {
+  padding: 48px 24px;
+}
+
+.nosotros-hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: #7e6492;
+  margin-bottom: 12px;
+}
+
+.nosotros-hero__slogan {
+  font-size: 1.15rem;
+  color: #555;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Misión y Visión */
+.nosotros-mv {
+  padding: 56px 40px;
+  background: #fff;
+}
+
+.nosotros-mv__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.mv-card {
+  border-radius: 16px;
+  padding: 40px 36px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.2s;
+}
+
+.mv-card:hover {
+  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.13);
+}
+
+.mv-card--vision {
+  background: linear-gradient(135deg, #f5f0fa 0%, #ece4f5 100%);
+  border-left: 5px solid #7e6492;
+}
+
+.mv-card--mision {
+  background: linear-gradient(135deg, #eaf4f8 0%, #daeef5 100%);
+  border-left: 5px solid #4a90a4;
+}
+
+.mv-card__icon {
+  font-size: 2.8rem;
+}
+
+.mv-card__title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: #333;
+  margin: 0;
+}
+
+.mv-card--vision .mv-card__title {
+  color: #7e6492;
+}
+
+.mv-card--mision .mv-card__title {
+  color: #4a90a4;
+}
+
+.mv-card__text {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.75;
+  margin: 0;
+}
+
+/* Valores */
+.nosotros-valores {
+  padding: 48px 40px;
+  background: #f9f6fd;
+}
+
+.nosotros-valores__title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.nosotros-valores__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.valor-card {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  transition: box-shadow 0.2s;
+}
+
+.valor-card:hover {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.13);
+}
+
+.valor-card__icon {
+  font-size: 2.2rem;
+}
+
+.valor-card__name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #7e6492;
+  margin: 0;
+}
+
+.valor-card__desc {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .nosotros-mv__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nosotros-valores__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .nosotros-mv {
+    padding: 40px 20px;
+  }
+
+  .nosotros-valores {
+    padding: 40px 20px;
+  }
+}

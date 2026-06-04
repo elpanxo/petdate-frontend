@@ -1,0 +1,393 @@
+.md-page {
+  padding-top: 90px;
+  padding-bottom: 60px;
+  min-height: 100vh;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Breadcrumb */
+.md-breadcrumb {
+  margin-bottom: 28px;
+  font-size: 0.95rem;
+  color: #888;
+}
+
+.md-breadcrumb a {
+  color: #7e6492;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.md-breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+/* Layout dos columnas */
+.md-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+
+.md-col-left,
+.md-col-right {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Ficha header: foto + nombre (fila horizontal) */
+.md-ficha-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  padding: 20px 24px;
+}
+
+.md-ficha-header-info {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.md-perfil-img {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f3eef8 0%, #e8dff0 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 3px solid #e8dff0;
+}
+
+.md-perfil-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.md-emoji-big {
+  color: #7e6492;
+}
+
+.md-nombre {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.md-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.md-badge {
+  padding: 3px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.md-badge-tipo {
+  background-color: #f0e8f8;
+  color: #7e6492;
+}
+
+.md-badge-sexo {
+  background-color: #e8f4fd;
+  color: #3d8fbd;
+}
+
+/* Tarjeta de datos verticales */
+.md-ficha-datos {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+.md-dato-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 13px 20px;
+  border-bottom: 1px solid #f3eef8;
+}
+
+.md-dato-row:last-child {
+  border-bottom: none;
+}
+
+.md-dato-row--block {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.md-dato-label {
+  font-size: 0.75rem;
+  color: #7e6492;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+.md-dato-val {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+  text-align: right;
+}
+
+.md-dato-row--block .md-dato-val {
+  text-align: left;
+  color: #555;
+}
+
+/* Resumen agenda */
+.md-resumen {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.md-resumen-item {
+  flex: 1;
+  min-width: 120px;
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.md-resumen-total { background: #f3eef8; }
+.md-resumen-pendiente { background: #fef9ec; }
+.md-resumen-vencido { background: #fdecea; }
+.md-resumen-completado { background: #edf7ef; }
+
+.md-resumen-num {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1;
+}
+
+.md-resumen-label {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 4px;
+  text-align: center;
+}
+
+/* Agenda */
+.md-agenda {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  padding: 32px;
+}
+
+.md-agenda-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.md-agenda-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.md-btn-evento {
+  background-color: #7e6492;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.md-btn-evento:hover {
+  background-color: #6a537c;
+}
+
+.md-agenda-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #aaa;
+}
+
+.md-agenda-empty span {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.md-agenda-empty p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+/* Timeline */
+.md-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.md-evento {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: #fafafa;
+  border-radius: 14px;
+  padding: 16px;
+  border-left: 5px solid #7e6492;
+  transition: box-shadow 0.2s;
+}
+
+.md-evento:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.md-evento-icon {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+  width: 44px;
+  text-align: center;
+}
+
+.md-evento-body {
+  flex: 1;
+}
+
+.md-evento-top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 6px;
+}
+
+.md-evento-tipo {
+  font-weight: 700;
+  color: #333;
+  font-size: 1rem;
+}
+
+.md-evento-estado {
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.md-evento-fecha {
+  font-size: 0.87rem;
+  color: #777;
+  margin-bottom: 6px;
+}
+
+.md-evento-desc {
+  margin: 0 0 4px;
+  color: #444;
+  font-size: 0.95rem;
+}
+
+.md-evento-obs {
+  margin: 0;
+  color: #888;
+  font-size: 0.87rem;
+  font-style: italic;
+}
+
+.md-evento-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.md-evento-actions button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: background-color 0.15s;
+}
+
+.md-evento-actions button:hover {
+  background-color: #ede8f2;
+}
+
+/* Botones de estado en modal */
+.md-estado-btn {
+  flex: 1;
+  padding: 8px 4px;
+  border-radius: 8px;
+  border: 2px solid;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.15s;
+}
+
+@media (max-width: 900px) {
+  .md-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .md-ficha-header {
+    padding: 16px;
+  }
+
+  .md-perfil-img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .md-resumen {
+    gap: 10px;
+  }
+
+  .md-agenda {
+    padding: 20px;
+  }
+
+  .md-foto-perfil {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid #7e6492;
+  }
+}

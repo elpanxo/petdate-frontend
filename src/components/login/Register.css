@@ -1,0 +1,196 @@
+.reg-page {
+  min-height: 100vh;
+  padding-top: 64px;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ── Paneles ── */
+.reg-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: auto;
+  transition: flex 0.55s cubic-bezier(0.77, 0, 0.18, 1);
+}
+
+.reg-panel--active {
+  flex: 1.5;
+  background: #fff;
+  padding: 48px 40px;
+}
+
+.reg-panel--inactive {
+  flex: 0.8;
+  cursor: pointer;
+}
+
+.reg-panel--inactive:hover .reg-teaser {
+  transform: scale(1.03);
+}
+
+/* Colores del panel inactivo */
+.reg-panel--cliente.reg-panel--inactive {
+  background: linear-gradient(145deg, #7e6492, #9f82b5);
+}
+
+.reg-panel--empresa.reg-panel--inactive {
+  background: linear-gradient(145deg, #4a6fa5, #6b8cbf);
+}
+
+/* ── Teaser (lado inactivo) ── */
+.reg-teaser {
+  text-align: center;
+  color: #fff;
+  padding: 32px 24px;
+  transition: transform 0.25s ease;
+  user-select: none;
+}
+
+.reg-teaser-icon {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 16px;
+}
+
+.reg-teaser h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.reg-teaser p {
+  font-size: 0.95rem;
+  opacity: 0.85;
+  margin-bottom: 20px;
+}
+
+.reg-teaser-cta {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 24px;
+  padding: 8px 20px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+/* ── Formulario (lado activo) ── */
+.reg-form-wrap {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.reg-form-title {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 4px;
+}
+
+.reg-form-sub {
+  color: #888;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.reg-error {
+  background: #fdecea;
+  color: #c0392b;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  font-size: 0.9rem;
+}
+
+/* ── Botones ── */
+.reg-btn {
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #fff;
+  cursor: pointer;
+  margin-bottom: 14px;
+  transition: opacity 0.2s;
+}
+
+.reg-btn:hover {
+  opacity: 0.88;
+}
+
+.reg-btn--cliente {
+  background-color: #7e6492;
+}
+
+.reg-btn--empresa {
+  background-color: #4a6fa5;
+}
+
+.reg-login-link {
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.reg-login-link a {
+  text-decoration: none;
+  color: #7e6492;
+  font-weight: 600;
+}
+
+.reg-login-link a:hover {
+  text-decoration: underline;
+}
+
+/* ── Divisor ── */
+.reg-divider {
+  width: 2px;
+  background: #e8e8e8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.reg-divider span {
+  background: #fff;
+  color: #bbb;
+  font-size: 0.8rem;
+  padding: 6px 0;
+  writing-mode: vertical-lr;
+  letter-spacing: 2px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .reg-page {
+    flex-direction: column;
+  }
+
+  .reg-panel--active {
+    padding: 36px 24px;
+    min-height: 100vh;
+  }
+
+  .reg-panel--inactive {
+    padding: 28px 20px;
+    min-height: 140px;
+  }
+
+  .reg-divider {
+    width: 100%;
+    height: 2px;
+    flex-direction: row;
+  }
+
+  .reg-divider span {
+    writing-mode: horizontal-tb;
+    padding: 0 8px;
+  }
+}

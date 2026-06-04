@@ -1,0 +1,199 @@
+.me-page {
+  padding-top: 90px;
+  padding-bottom: 60px;
+  min-height: 100vh;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* Header */
+.me-header {
+  margin-bottom: 36px;
+}
+
+.me-titulo {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.me-subtitulo {
+  font-family: 'Jost', sans-serif;
+  color: #666;
+  margin: 4px 0 0;
+  font-size: 1rem;
+}
+
+/* Secciones */
+.me-seccion {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.07);
+  padding: 32px;
+  margin-bottom: 28px;
+}
+
+.me-seccion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.me-seccion-header h2 {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.me-acciones {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.me-guardado-msg {
+  font-size: 0.9rem;
+  color: #28a745;
+  font-weight: 600;
+}
+
+/* Botón principal */
+.me-btn-primary {
+  background-color: #7e6492;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 9px 20px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.me-btn-primary:hover {
+  background-color: #6a537c;
+}
+
+/* Grid formulario */
+.me-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.me-form-full {
+  grid-column: 1 / -1;
+}
+
+/* Promociones */
+.me-promos-empty {
+  text-align: center;
+  padding: 48px 20px;
+  color: #aaa;
+}
+
+.me-promos-empty span {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.me-promos-empty p {
+  margin: 4px 0;
+  font-size: 0.95rem;
+}
+
+.me-promos-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.me-promo-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border-left: 5px solid #7e6492;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.me-promo-info {
+  flex: 1;
+}
+
+.me-promo-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 4px;
+}
+
+.me-promo-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.me-promo-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.me-promo-btn-edit,
+.me-promo-btn-delete {
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.me-promo-btn-edit {
+  background: #f0e8f8;
+  color: #7e6492;
+}
+
+.me-promo-btn-edit:hover {
+  background: #e0d0f0;
+}
+
+.me-promo-btn-delete {
+  background: #fff0f0;
+  color: #dc3545;
+}
+
+.me-promo-btn-delete:hover {
+  background: #ffd9d9;
+}
+
+@media (max-width: 640px) {
+  .me-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .me-form-full {
+    grid-column: 1;
+  }
+
+  .me-seccion {
+    padding: 20px;
+  }
+
+  .me-titulo {
+    font-size: 1.5rem;
+  }
+}
