@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-deployment
+  labels:
+    app: backend
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend-app
+          # La imagen se reemplazará dinámicamente en el pipeline de GitHub Actions
+          image: 179740774823.dkr.ecr.us-east-1.amazonaws.com/rent-car:${IMAGE_TAG}
+          ports:
+            - containerPort: 8080
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 80 # Puerto expuesto al mundo (Load Balancer)
+      targetPort: 8080 # Puerto donde corre la app dentro del contenedor
