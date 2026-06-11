@@ -61,3 +61,4 @@ jobs:
 
           # Despliegue en el cluster
           kubectl apply -f k8s/back.yml
+            # Opcional: Verificar que el despliegue se realizó correctamente
