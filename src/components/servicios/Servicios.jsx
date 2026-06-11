@@ -90,6 +90,10 @@ function Servicios() {
       <AppNavbar />
 
       <section className="servicios-hero">
+        <div className="servicios-hero__bg" aria-hidden="true">
+          <div className="servicios-hero__bg-placeholder">🐾</div>
+        </div>
+        <div className="servicios-hero__vignette" aria-hidden="true" />
         <div className="servicios-hero__content">
           <h1 className="servicios-hero__title">Servicios</h1>
           <p className="servicios-hero__slogan">

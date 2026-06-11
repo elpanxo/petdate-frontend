@@ -308,21 +308,107 @@
 /* ═══════════════════════════════════════════════════════
    QUIÉNES SOMOS
    ═══════════════════════════════════════════════════════ */
-.home-about { background: #b09cbf; position: relative; }
-.home-about__wave-top, .home-about__wave-bottom { line-height: 0; }
-.home-about__wave-top svg, .home-about__wave-bottom svg { display: block; width: 100%; height: 60px; }
-.home-about__content { padding: 40px 80px; max-width: 960px; margin: 0 auto; }
-
-.home-about__title {
-  font-family: 'Georgia', serif;
-  font-style: italic;
-  font-size: 2rem; font-weight: 400;
-  color: #2d2d2d; text-align: center; margin: 0 0 24px;
+.home-about {
+  margin: 0 24px;
+  border-radius: 20px;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 50fr 50fr;
+  min-height: 680px;
 }
 
-.home-about__text { font-size: 0.95rem; line-height: 1.8; color: #2d2d2d; margin-bottom: 14px; text-align: justify; }
-.home-about__text:last-child { margin-bottom: 0; }
+.home-about__panel {
+  background-color: #90b18a;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+  padding: 80px 56px;
+}
 
+.home-about__title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  color: #ffffff;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  font-style: normal;
+  margin: 0;
+}
+
+.home-about__title--block {
+  display: block;
+}
+
+.home-about__textbox {
+  border: 1.5px dashed rgba(255, 255, 255, 0.5);
+  border-radius: 6px;
+  padding: 22px 24px;
+}
+
+.home-about__text {
+  font-family: 'Jost', 'Georgia', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.8;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 0;
+}
+
+.home-about__btn {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 0.85rem 2rem;
+  background-color: var(--bordo);
+  border: 2px solid var(--bordo);
+  color: #ffffff;
+  font-family: 'Jost', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.home-about__btn:hover {
+  background-color: #6a5280;
+  border-color: #6a5280;
+}
+
+.home-about__photo {
+  position: relative;
+  overflow: hidden;
+  background-color: #c8bdb0;
+  min-height: 680px;
+}
+
+.home-about__photo::before {
+  content: '+ Agrega tu foto aquí';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #8a7060;
+  letter-spacing: 0.06em;
+  border: 2px dashed #aa9080;
+  pointer-events: none;
+}
+
+.home-about__photo:has(img)::before { display: none; }
+
+.home-about__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+}
 /* ═══════════════════════════════════════════════════════
    CONSEJOS
    ═══════════════════════════════════════════════════════ */
@@ -356,7 +442,9 @@
    ═══════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
   .home-promos__grid, .home-tips__grid { grid-template-columns: 1fr 1fr; }
-  .home-about__content { padding: 40px 32px; }
+  .home-about { grid-template-columns: 1fr; margin: 0 12px; }
+  .home-about__panel { padding: 48px 32px; }
+  .home-about__photo { min-height: 340px; }
 }
 
 @media (max-width: 600px) {

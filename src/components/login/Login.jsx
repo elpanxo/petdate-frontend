@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { Container, Row, Col, Form, Button, Card, Alert } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
+import { Mail, Lock, Eye, EyeOff, Briefcase, PawPrint, Heart} from 'lucide-react';
 import AuthNavbar from '../navbar/AuthNavbar';
-import api, { ApiError } from '../../api/petdate-api';
-import { Building2 } from 'lucide-react';
+import catAndDog from '../../assets/roots/cat-and-dog.png';
+import api, { ApiError, token } from '../../api/petdate-api';
+import './Login.css';
 
 const Login = () => {
   const [email, setEmail]       = useState('');
   const [password, setPassword] = useState('');
+  const [showPass, setShowPass] = useState(false);
   const [error, setError]       = useState('');
   const [loading, setLoading]   = useState(false);
   const navigate = useNavigate();
@@ -16,27 +18,19 @@ const Login = () => {
     e.preventDefault();
     setError('');
     setLoading(true);
-
     try {
-      // 1. Login → guarda el JWT en localStorage automáticamente
       await api.auth.login(email, password);
-
-      // 2. Obtener datos completos del usuario (id, nombre, etc.)
-      const usuario = await api.usuarios.porCorreo(email);
-
-      // 3. Guardar datos del usuario para la UI
+      const claims = token.payload();
+      if (!claims?.id) throw new Error('No se pudo leer la sesión');
+      const usuario = await api.usuarios.porId(claims.id);
       localStorage.setItem('user', JSON.stringify({
         id:    usuario.id,
         email: usuario.correo,
         name:  usuario.nombre,
         role:  'cliente',
       }));
-
       window.dispatchEvent(new Event('userChanged'));
-
-      // 4. Redirigir a mis mascotas
       navigate('/');
-
     } catch (err) {
       if (err instanceof ApiError) {
         if (err.status === 401) setError('Correo o contraseña incorrectos');
@@ -53,74 +47,99 @@ const Login = () => {
   return (
     <>
       <AuthNavbar />
-      <Container
-        className="d-flex justify-content-center align-items-center"
-        style={{ minHeight: '100vh', paddingTop: '70px' }}
-      >
-        <Row className="w-100">
-          <Col md={6} lg={4} className="mx-auto">
-            <Card className="shadow">
-              <Card.Body className="p-5">
-                <h2 className="text-center mb-4">Iniciar Sesión</h2>
+      <div className="login-page">
 
-                {error && <Alert variant="danger">{error}</Alert>}
+        {/* ── Izquierda: ilustración ── */}
+        <div className="login-left">
+          <div className="login-left__text">
+            <h2 className="login-left__title">
+              Todo lo que tu mascota<br />necesita, en un solo lugar. <Heart size={28} style={{ display: 'inline', verticalAlign: 'middle', color: '#e07b54', fill: '#e07b54' }} />
+              </h2>
+            <p className="login-left__sub">
+              Conectamos dueños y empresas de confianza<br />
+              para el mejor cuidado de tu mascota <PawPrint size={16} style={{ display: 'inline',verticalAlign: 'middle' }} />
+              </p>
+          </div>
+          <div className="login-left__illo">
+            <img src={catAndDog} alt="Perro y gato" className="login-left__img" />
+          </div>
+        </div>
 
-                <Form onSubmit={handleSubmit}>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Correo Electrónico</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="ejemplo@correo.com"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
+        {/* ── Derecha: formulario ── */}
+        <div className="login-right">
+          <div className="login-card">
 
-                  <Form.Group className="mb-4">
-                    <Form.Label>Contraseña</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="********"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                    />
-                  </Form.Group>
+            <h1 className="login-card__title">Iniciar Sesión</h1>
+            <p className="login-card__sub">Ingresa tus datos para continuar</p>
 
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    className="w-100 mb-3"
-                    disabled={loading}
+            {error && <div className="login-error">{error}</div>}
+
+            <form onSubmit={handleSubmit} className="login-form">
+
+              <div className="login-field">
+                <label className="login-label">Correo electrónico</label>
+                <div className="login-input-wrap">
+                  <Mail size={16} className="login-input-icon" />
+                  <input
+                    type="email"
+                    className="login-input"
+                    placeholder="ejemplo@correo.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="login-field">
+                <label className="login-label">Contraseña</label>
+                <div className="login-input-wrap">
+                  <Lock size={16} className="login-input-icon" />
+                  <input
+                    type={showPass ? 'text' : 'password'}
+                    className="login-input"
+                    placeholder="••••••••"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                  />
+                  <button
+                    type="button"
+                    className="login-input-toggle"
+                    onClick={() => setShowPass(!showPass)}
+                    tabIndex={-1}
                   >
-                    {loading ? 'Ingresando...' : 'Ingresar'}
-                  </Button>
+                    {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
 
-                  <div className="text-center">
-                    <span className="text-muted">¿No tienes cuenta? </span>
-                    <Link to="/register" className="text-decoration-none">
-                      Regístrate aquí
-                    </Link>
-                  </div>
+              <button type="submit" className="login-btn-primary" disabled={loading}>
+                {loading ? 'Ingresando...' : 'Ingresar'}
+              </button>
 
-                  <hr className="my-3" />
+              <div className="login-separator"><span>o</span></div>
+              <p className="login-switch-label">Ingresa como</p>
 
-                  <div className="text-center">
-                    <Link
-                      to="/login-empresa"
-                      className="text-decoration-none"
-                      style={{ color: '#7e6492', fontSize: '0.9rem', fontWeight: 600 }}
-                    >
-                      <Building2 size={16} /> ¿Eres empresa? Inicia sesión aquí
-                    </Link>
-                  </div>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      </Container>
+              {/* Solo muestra Empresa — el usuario es el default */}
+              <Link to="/login-empresa" className="login-mode-btn">
+                <Briefcase size={16} />
+                <span>Empresa / Negocio</span>
+              </Link>
+
+              <p className="login-register-link">
+                ¿No tienes cuenta?{' '}
+                <Link to="/register">Regístrate aquí</Link>
+              </p>
+
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <div className="login-footer">
+        <span>Hecho con <Heart size={14} /> para las mascotas de Chile</span>
+      </div>
     </>
   );
 };

@@ -186,24 +186,35 @@ function Home() {
       </section>
 
       {/* ══════ QUIÉNES SOMOS ══════ */}
-      <section className="home-about">
-        <div className="home-about__wave-top">
-          <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,40 C360,80 1080,0 1440,40 L1440,0 L0,0 Z" fill="#f5f0f0"/>
-          </svg>
-        </div>
-        <div className="home-about__content">
-          <h2 className="home-about__title">¿Quiénes somos?</h2>
-          <p className="home-about__text">PetDate nace de una necesidad real: los dueños de mascotas merecen una forma simple, organizada y confiable de gestionar el bienestar de sus compañeros. Somos un equipo de tres estudiantes de Ingeniería apasionados por los animales y la tecnología.</p>
-          <p className="home-about__text">Nuestra misión es centralizar toda la información relacionada con el cuidado de las mascotas en un solo lugar. Porque sabemos lo frustrante que es buscar el carnet de vacunas en una gaveta, olvidar la fecha del próximo control o perder el historial médico de tu mejor amigo.</p>
-          <p className="home-about__text">Creemos que cada mascota merece el mejor cuidado posible, y que cada dueño merece las herramientas para dárselo.</p>
-        </div>
-        <div className="home-about__wave-bottom">
-          <svg viewBox="0 0 1440 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0,40 C360,0 1080,80 1440,40 L1440,80 L0,80 Z" fill="#f5f0f0"/>
-          </svg>
-        </div>
-      </section>
+<section className="home-about">
+
+  {/* Panel lila izquierdo */}
+  <div className="home-about__panel">
+    <h2 className="home-about__title">
+      ¿Quiénes <em className="home-about__title--green">somos</em>
+      <em className="home-about__title--green home-about__title--block">nosotros?</em>
+    </h2>
+
+    <div className="home-about__textbox">
+      <p className="home-about__text">
+        PetDate nace de una necesidad real: los dueños de mascotas merecen una forma
+        simple, organizada y confiable de gestionar el bienestar de sus compañeros.
+        Somos un equipo de tres estudiantes de Ingeniería apasionados por los animales
+        y la tecnología, que decidimos crear la plataforma que siempre quisimos tener.
+      </p>
+    </div>
+
+    <Link to="/nosotros" className="home-about__btn">
+      Leer más sobre nosotros
+    </Link>
+  </div>
+
+  {/* Columna derecha — espacio para foto */}
+  <div className="home-about__photo">
+        <img src="https://images.unsplash.com/photo-1450778869180-41d0601e046e?w=1200&q=85" alt="Nuestro equipo" />
+  </div>
+
+</section>
 
       {/* ══════ CONSEJOS ══════ */}
       <section className="home-tips">

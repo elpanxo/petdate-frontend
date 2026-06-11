@@ -1,33 +1,104 @@
-/* Hero */
+@import url('https://fonts.googleapis.com/css2?family=Aclonica&family=Jost:wght@300;400;600;700&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   HERO — fondo foto 1×1 con viñeta + subtle-zoom
+   ═══════════════════════════════════════════════════════ */
+
+@keyframes subtle-zoom {
+  from { transform: scale(1);    }
+  to   { transform: scale(1.08); }
+}
+
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
 .nosotros-hero {
-  padding-top: 70px;
-  min-height: 220px;
+  position: relative;
+  min-height: 340px;
+  padding-top: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #f5f0fa 0%, #eaf4f8 100%);
-  text-align: center;
+  overflow: hidden;
+  background-color: #b8ada0;
 }
 
+/* ── Foto de fondo 1×1 ── */
+.nosotros-hero__bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.nosotros-hero__bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.42;
+  filter: saturate(0.28) sepia(0.12);
+  animation: subtle-zoom 24s linear infinite alternate;
+  will-change: transform;
+}
+
+.nosotros-hero__bg-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e8e0d8;
+  border: 1.5px dashed #c0b0a0;
+  opacity: 0.55;
+  font-size: 4rem;
+}
+
+/* ── Viñeta radial ── */
+.nosotros-hero__vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 60% 80% at 50% 50%,
+    rgba(250, 247, 242, 0.88) 0%,
+    rgba(250, 247, 242, 0.30) 55%,
+    rgba(250, 247, 242, 0.0) 100%
+  );
+}
+
+/* ── Texto centrado ── */
 .nosotros-hero__content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
   padding: 48px 24px;
+  animation: hero-enter 600ms ease 100ms both;
 }
 
 .nosotros-hero__title {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #7e6492;
-  margin-bottom: 12px;
+  font-family: 'Aclonica', sans-serif;
+  font-weight: 400;
+  font-size: clamp(2.8rem, 7vw, 4.5rem);
+  color: #3d2b1f;
+  margin: 0 0 16px;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
 }
 
 .nosotros-hero__slogan {
-  font-size: 1.15rem;
-  color: #555;
-  max-width: 520px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 2vw, 1.15rem);
+  color: #6b4c38;
+  max-width: 480px;
   margin: 0 auto;
+  line-height: 1.65;
 }
 
-/* Misión y Visión */
+/* ═══════════════════════════════════════════════════════
+   MISIÓN Y VISIÓN
+   ═══════════════════════════════════════════════════════ */
 .nosotros-mv {
   padding: 56px 40px;
   background: #fff;
@@ -51,9 +122,7 @@
   transition: box-shadow 0.2s;
 }
 
-.mv-card:hover {
-  box-shadow: 0 6px 28px rgba(0, 0, 0, 0.13);
-}
+.mv-card:hover { box-shadow: 0 6px 28px rgba(0, 0, 0, 0.13); }
 
 .mv-card--vision {
   background: linear-gradient(135deg, #f5f0fa 0%, #ece4f5 100%);
@@ -65,104 +134,191 @@
   border-left: 5px solid #4a90a4;
 }
 
-.mv-card__icon {
-  font-size: 2.8rem;
-}
-
 .mv-card__title {
+  font-family: 'Aclonica', sans-serif;
   font-size: 1.6rem;
   font-weight: 800;
   color: #333;
   margin: 0;
 }
 
-.mv-card--vision .mv-card__title {
-  color: #7e6492;
-}
-
-.mv-card--mision .mv-card__title {
-  color: #4a90a4;
-}
+.mv-card--vision .mv-card__title { color: #7e6492; }
+.mv-card--mision .mv-card__title { color: #4a90a4; }
 
 .mv-card__text {
+  font-family: 'Jost', sans-serif;
   font-size: 1rem;
   color: #555;
   line-height: 1.75;
   margin: 0;
 }
 
-/* Valores */
-.nosotros-valores {
-  padding: 48px 40px;
-  background: #f9f6fd;
+/* ===== Misión y Visión ===== */
+.nosotros-mv {
+  padding: 40px 48px;
+  background: #f0edf4;
 }
-
+ 
+/* Outer card that wraps both mv cards */
+.nosotros-mv__outer {
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px 32px;
+  max-width: 1300px;
+  margin: 0 auto;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+ 
+.nosotros-mv__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+ 
+.mv-card {
+  background: #f8f6fb;
+  border-radius: 14px;
+  padding: 32px 32px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid #ece8f2;
+}
+ 
+.mv-card__icon-wrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #e9e6ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  flex-shrink: 0;
+}
+ 
+.mv-card__title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 12px 0;
+  color: #7e6492;
+}
+ 
+.mv-card__divider {
+  border: none;
+  border-top: 1.5px solid #ddd;
+  margin: 0 0 18px 0;
+}
+ 
+.mv-card__text {
+  font-size: 0.95rem;
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+}
+ 
+/* ===== Valores ===== */
+.nosotros-valores {
+  padding: 28px 48px 40px 48px;
+  background: #f0edf4;
+}
+ 
+/* Outer card wrapping the whole valores section */
+.nosotros-valores__outer {
+  background: #fff;
+  border-radius: 18px;
+  padding: 32px 32px 36px 32px;
+  max-width: 1300px;
+  margin: 0 auto;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.06);
+}
+ 
+.nosotros-valores__header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+ 
 .nosotros-valores__title {
   font-size: 1.6rem;
   font-weight: 700;
-  color: #333;
-  margin-bottom: 32px;
-  text-align: center;
+  color: #222;
+  margin: 0;
 }
-
+ 
 .nosotros-valores__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  max-width: 900px;
-  margin: 0 auto;
+  gap: 0;
 }
-
+ 
+/* Vertical dividers between valor cards */
 .valor-card {
-  background: #fff;
-  border-radius: 12px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-  padding: 28px 24px;
+  padding: 16px 28px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 18px;
+  border-right: 1px solid #e8e4ef;
+}
+ 
+.valor-card:last-child {
+  border-right: none;
+}
+ 
+.valor-card__icon-wrap {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e9e6ee;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+ 
+.valor-card__body {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 12px;
-  transition: box-shadow 0.2s;
+  gap: 6px;
 }
-
-.valor-card:hover {
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.13);
-}
-
-.valor-card__icon {
-  font-size: 2.2rem;
-}
-
+ 
 .valor-card__name {
-  font-size: 1.05rem;
+  font-size: 1rem;
   font-weight: 700;
-  color: #7e6492;
+  color: #222;
   margin: 0;
 }
-
+ 
 .valor-card__desc {
-  font-size: 0.9rem;
+  font-size: 0.88rem;
   color: #666;
   margin: 0;
-  line-height: 1.6;
+  line-height: 1.65;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+/* ═══════════════════════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════════════════════ */
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .nosotros-mv,
+  .nosotros-valores {
+    padding: 24px 16px;
+  }
   .nosotros-mv__grid {
     grid-template-columns: 1fr;
   }
-
   .nosotros-valores__grid {
     grid-template-columns: 1fr;
   }
-
-  .nosotros-mv {
-    padding: 40px 20px;
+  .valor-card {
+    border-right: none;
+    border-bottom: 1px solid #e8e4ef;
   }
-
-  .nosotros-valores {
-    padding: 40px 20px;
+  .valor-card:last-child {
+    border-bottom: none;
   }
 }

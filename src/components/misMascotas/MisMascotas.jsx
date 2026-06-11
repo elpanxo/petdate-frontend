@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Modal, Button, Form } from 'react-bootstrap';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
-import api, { ApiError } from '../../api/petdate-api';
+import api, { ApiError, BASE_URL, token } from '../../api/petdate-api';
 import { Dog, Cat, Bird, Rabbit, Turtle, Fish, PawPrint, Hourglass, TriangleAlert, Pencil, Trash2 } from 'lucide-react';
 import './MisMascotas.css';
 
@@ -149,28 +149,24 @@ function MisMascotas() {
     if (!window.confirm('¿Seguro que quieres eliminar esta mascota?')) return;
     try {
       await api.mascotas.eliminar(id);
-      localStorage.removeItem(`mascota_img_${id}`);
       setMascotas(prev => prev.filter(m => m.id !== id));
     } catch (err) {
       alert('No se pudo eliminar la mascota. Intenta de nuevo.');
     }
   };
 
-  // ── Preview imagen (solo local, el backend no almacena imágenes) ──
+  // ── Preview imagen (solo para mostrar antes de subir; el backend la persiste) ──
   const handleImagen = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
-    // Si es una mascota nueva, guardamos el archivo temporalmente
-    // y lo subimos después de crearla
+    // Guardamos el archivo temporalmente y lo subimos al backend al guardar
     setForm(prev => ({ ...prev, _imagenFile: file }));
 
-    // Preview local
+    // Preview local (solo para esta sesión, no se persiste en localStorage)
     const reader = new FileReader();
     reader.onload = (ev) => {
-      const data = ev.target.result;
-      if (editandoId) localStorage.setItem(`mascota_img_${editandoId}`, data);
-      setForm(prev => ({ ...prev, imagen: data }));
+      setForm(prev => ({ ...prev, imagen: ev.target.result }));
     };
     reader.readAsDataURL(file);
   };
@@ -199,10 +195,10 @@ function MisMascotas() {
         formData.append('imagen', form._imagenFile);
 
         const response = await fetch(
-          `http://localhost:8080/mascotas/${mascotaGuardada.id}/imagen`,
+          `${BASE_URL}/mascotas/${mascotaGuardada.id}/imagen`,
           {
             method: 'POST',
-            headers: { Authorization: `Bearer ${localStorage.getItem('petdate_token')}` },
+            headers: token.exists() ? { Authorization: `Bearer ${token.get()}` } : {},
             body: formData,  // NO pongas Content-Type — el browser lo setea solo con el boundary
           }
         );
@@ -278,8 +274,11 @@ function MisMascotas() {
               >
                 <div className="mm-card-img">
                   {m.imagenUrl
-                    ? <img src={`http://localhost:8080${m.imagenUrl}`} alt={m.nombre} className="mm-card-foto" />
-                    : <span className="mm-card-emoji">{EMOJI_TIPO[m.especie] || '🐾'}</span>
+                    ? <img src={`${BASE_URL}${m.imagenUrl}`} alt={m.nombre} className="mm-card-foto" />
+                    : (() => {
+                        const IconoTipo = ICON_TIPO[m.especie] || PawPrint;
+                        return <IconoTipo className="mm-card-emoji" size={40} />;
+                      })()
                   }
                 </div>
                 <div className="mm-card-body">
@@ -320,7 +319,7 @@ function MisMascotas() {
                   <img src={form.imagen} alt="preview" className="mm-img-preview" />
                 )}
                 <Form.Text className="text-muted">
-                  La foto se guarda solo en este dispositivo.
+                  La foto se guarda en el servidor y estará disponible en cualquier dispositivo.
                 </Form.Text>
               </Form.Group>
 

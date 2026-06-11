@@ -4,8 +4,8 @@ import { Modal, Button, Form } from 'react-bootstrap';
 import Navbar from '../navbar/Navbar';
 import Footer from '../footer/Footer';
 import { TIPO_COLOR, COMUNAS } from '../servicios/serviciosData';
-import { Building2, ClipboardList, CheckCircle2, Tag, Pencil, Trash2 } from 'lucide-react';
-import api, { ApiError } from '../../api/petdate-api';
+import { Building2, ClipboardList, CheckCircle2, Tag, Pencil, Trash2, Image as ImageIcon, Newspaper } from 'lucide-react';
+import api, { ApiError, BASE_URL } from '../../api/petdate-api';
 import './MiEmpresa.css';
 
 const COMUNAS_LISTA = COMUNAS.filter(c => c !== 'Todas');
@@ -16,6 +16,11 @@ const RUBROS_EMPRESA = [
   { label: 'Servicios (Peluquería / Spa)', valor: 'Peluquería / Spa' },
   { label: 'Tienda de mascotas',           valor: 'Tienda de mascotas' },
 ];
+
+// Restricciones de la imagen del servicio (validación en el cliente —
+// el backend no valida tipo/tamaño, así que esto es solo una primera barrera de UX)
+const TIPOS_IMAGEN_PERMITIDOS = ['image/jpeg', 'image/png', 'image/webp'];
+const TAMANO_MAX_MB = 5;
 
 function MiEmpresa() {
   const navigate = useNavigate();
@@ -35,6 +40,13 @@ function MiEmpresa() {
   const [guardado, setGuardado]             = useState(false);
   const [guardando, setGuardando]           = useState(false);
 
+  // ── Imagen / logo del servicio ──────────────────────────────────────────
+  const [imagenUrl, setImagenUrl]           = useState('');
+  const [imagenPreview, setImagenPreview]   = useState(null);
+  const [archivoImagen, setArchivoImagen]   = useState(null);
+  const [subiendoImagen, setSubiendoImagen] = useState(false);
+  const [errorImagen, setErrorImagen]       = useState('');
+
   const [promociones, setPromociones]       = useState([]);
   const [showModal, setShowModal]           = useState(false);
   const [editandoPromoId, setEditandoPromoId] = useState(null);
@@ -42,13 +54,26 @@ function MiEmpresa() {
   const [errPromo, setErrPromo]             = useState({});
   const [guardandoPromo, setGuardandoPromo] = useState(false);
 
+  // ── Blog ─────────────────────────────────────────────────────────────────
+  const [blogs, setBlogs]                       = useState([]);
+  const [showModalBlog, setShowModalBlog]       = useState(false);
+  const [editandoBlogId, setEditandoBlogId]     = useState(null);
+  const [formBlog, setFormBlog]                 = useState({ titulo: '', texto: '' });
+  const [errBlog, setErrBlog]                   = useState({});
+  const [guardandoBlog, setGuardandoBlog]       = useState(false);
+  const [imagenActualBlog, setImagenActualBlog] = useState('');
+  const [archivoImagenBlog, setArchivoImagenBlog] = useState(null);
+  const [imagenPreviewBlog, setImagenPreviewBlog] = useState(null);
+  const [errorImagenBlog, setErrorImagenBlog]   = useState('');
+
   useEffect(() => {
     if (!user?.servicioId) return;
     const cargar = async () => {
       try {
-        const [svc, promos] = await Promise.all([
+        const [svc, promos, entradasBlog] = await Promise.all([
           api.servicios.porId(user.servicioId),
           api.promociones.porServicio(user.servicioId, { size: 100 }),
+          api.blogs.porServicio(user.servicioId, { size: 100, sort: 'fecha,desc' }),
         ]);
         setFormServicio({
           nombre:      svc.nombreServicio || '',
@@ -63,7 +88,9 @@ function MiEmpresa() {
           instagram:   svc.instagram      || '',
           facebook:    svc.facebook       || '',
         });
+        setImagenUrl(svc.imagenUrl || '');
         setPromociones(promos.content || []);
+        setBlogs(entradasBlog.content || []);
       } catch {
         setErrorCarga('No se pudo cargar la información de tu empresa.');
       } finally {
@@ -72,6 +99,15 @@ function MiEmpresa() {
     };
     cargar();
   }, []);
+
+  // Limpia el object URL del preview al reemplazarlo o desmontar (evita fugas de memoria)
+  useEffect(() => {
+    return () => { if (imagenPreview) URL.revokeObjectURL(imagenPreview); };
+  }, [imagenPreview]);
+
+  useEffect(() => {
+    return () => { if (imagenPreviewBlog) URL.revokeObjectURL(imagenPreviewBlog); };
+  }, [imagenPreviewBlog]);
 
   const campo = (field, value) => setFormServicio(prev => ({ ...prev, [field]: value }));
 
@@ -105,6 +141,50 @@ function MiEmpresa() {
     } finally {
       setGuardando(false);
     }
+  };
+
+  // ── Handlers de imagen ───────────────────────────────────────────────────
+
+  const seleccionarImagen = (e) => {
+    const archivo = e.target.files?.[0];
+    setErrorImagen('');
+    if (!archivo) return;
+
+    if (!TIPOS_IMAGEN_PERMITIDOS.includes(archivo.type)) {
+      setErrorImagen('Formato no permitido. Usa JPG, PNG o WEBP.');
+      e.target.value = '';
+      return;
+    }
+    if (archivo.size > TAMANO_MAX_MB * 1024 * 1024) {
+      setErrorImagen(`La imagen no puede superar los ${TAMANO_MAX_MB} MB.`);
+      e.target.value = '';
+      return;
+    }
+
+    setArchivoImagen(archivo);
+    setImagenPreview(URL.createObjectURL(archivo));
+  };
+
+  const subirImagen = async () => {
+    if (!archivoImagen || !user?.servicioId) return;
+    setSubiendoImagen(true);
+    setErrorImagen('');
+    try {
+      const actualizado = await api.servicios.subirImagen(user.servicioId, archivoImagen);
+      setImagenUrl(actualizado.imagenUrl || '');
+      setArchivoImagen(null);
+      setImagenPreview(null);
+    } catch {
+      setErrorImagen('No se pudo subir la imagen. Intenta nuevamente.');
+    } finally {
+      setSubiendoImagen(false);
+    }
+  };
+
+  const cancelarSeleccionImagen = () => {
+    setArchivoImagen(null);
+    setImagenPreview(null);
+    setErrorImagen('');
   };
 
   const recargarPromociones = async () => {
@@ -177,6 +257,111 @@ function MiEmpresa() {
     }
   };
 
+  // ── Blog: handlers ───────────────────────────────────────────────────────
+
+  const recargarBlogs = async () => {
+    const data = await api.blogs.porServicio(user.servicioId, { size: 100, sort: 'fecha,desc' });
+    setBlogs(data.content || []);
+  };
+
+  const limpiarSeleccionImagenBlog = () => {
+    if (imagenPreviewBlog) URL.revokeObjectURL(imagenPreviewBlog);
+    setArchivoImagenBlog(null);
+    setImagenPreviewBlog(null);
+    setErrorImagenBlog('');
+  };
+
+  const abrirAgregarBlog = () => {
+    setEditandoBlogId(null);
+    setFormBlog({ titulo: '', texto: '' });
+    setErrBlog({});
+    setImagenActualBlog('');
+    limpiarSeleccionImagenBlog();
+    setShowModalBlog(true);
+  };
+
+  const abrirEditarBlog = (blog) => {
+    setEditandoBlogId(blog.idBlog);
+    setFormBlog({ titulo: blog.titulo || '', texto: blog.texto || '' });
+    setErrBlog({});
+    setImagenActualBlog(blog.imagen || '');
+    limpiarSeleccionImagenBlog();
+    setShowModalBlog(true);
+  };
+
+  const eliminarBlog = async (idBlog) => {
+    if (!window.confirm('¿Eliminar esta entrada de blog?')) return;
+    try {
+      await api.blogs.eliminar(idBlog);
+      await recargarBlogs();
+    } catch {
+      alert('Error al eliminar la entrada de blog.');
+    }
+  };
+
+  const seleccionarImagenBlog = (e) => {
+    const archivo = e.target.files?.[0];
+    setErrorImagenBlog('');
+    if (!archivo) return;
+
+    if (!TIPOS_IMAGEN_PERMITIDOS.includes(archivo.type)) {
+      setErrorImagenBlog('Formato no permitido. Usa JPG, PNG o WEBP.');
+      e.target.value = '';
+      return;
+    }
+    if (archivo.size > TAMANO_MAX_MB * 1024 * 1024) {
+      setErrorImagenBlog(`La imagen no puede superar los ${TAMANO_MAX_MB} MB.`);
+      e.target.value = '';
+      return;
+    }
+
+    if (imagenPreviewBlog) URL.revokeObjectURL(imagenPreviewBlog);
+    setArchivoImagenBlog(archivo);
+    setImagenPreviewBlog(URL.createObjectURL(archivo));
+  };
+
+  const validarBlog = () => {
+    const errs = {};
+    if (!formBlog.titulo.trim()) errs.titulo = 'El título es obligatorio';
+    if (!formBlog.texto.trim())  errs.texto  = 'El contenido es obligatorio';
+    return errs;
+  };
+
+  const guardarBlog = async () => {
+    const errs = validarBlog();
+    if (Object.keys(errs).length) { setErrBlog(errs); return; }
+    setGuardandoBlog(true);
+    try {
+      const payload = {
+        idServicio: user.servicioId,
+        titulo:     formBlog.titulo,
+        texto:      formBlog.texto,
+      };
+      let blogGuardado;
+      if (editandoBlogId) {
+        blogGuardado = await api.blogs.actualizar(editandoBlogId, payload);
+      } else {
+        blogGuardado = await api.blogs.crear(payload);
+      }
+
+      // Si se seleccionó una imagen nueva, se sube una vez que el blog tiene ID
+      if (archivoImagenBlog && blogGuardado?.idBlog) {
+        try {
+          await api.blogs.subirImagen(blogGuardado.idBlog, archivoImagenBlog);
+        } catch {
+          setErrorImagenBlog('La entrada se guardó, pero no se pudo subir la imagen.');
+        }
+      }
+
+      await recargarBlogs();
+      setShowModalBlog(false);
+    } catch {
+      alert('Error al guardar la entrada de blog. Intenta nuevamente.');
+    } finally {
+      setGuardandoBlog(false);
+    }
+  };
+
   const color = TIPO_COLOR[formServicio.tipo] || '#7e6492';
 
   if (cargando) return (
@@ -220,6 +405,39 @@ function MiEmpresa() {
               <button className="me-btn-primary" onClick={guardarServicio} disabled={guardando}>
                 {guardando ? 'Guardando...' : 'Guardar cambios'}
               </button>
+            </div>
+          </div>
+
+          {/* Logo / imagen del servicio */}
+          <div className="me-logo">
+            <img
+              className="me-logo-img"
+              src={imagenPreview || (imagenUrl ? `${BASE_URL}${imagenUrl}` : '/img/placeholder-empresa.png')}
+              alt={`Logo de ${formServicio.nombre || 'tu empresa'}`}
+            />
+            <div className="me-logo-controles">
+              <label className="me-btn-secondary" htmlFor="me-input-imagen">
+                <ImageIcon size={16} /> Elegir imagen
+              </label>
+              <input
+                id="me-input-imagen"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                onChange={seleccionarImagen}
+                style={{ display: 'none' }}
+              />
+              {archivoImagen && (
+                <>
+                  <button className="me-btn-primary" onClick={subirImagen} disabled={subiendoImagen}>
+                    {subiendoImagen ? 'Subiendo...' : 'Guardar imagen'}
+                  </button>
+                  <button className="me-btn-secondary" onClick={cancelarSeleccionImagen} disabled={subiendoImagen}>
+                    Cancelar
+                  </button>
+                </>
+              )}
+              {errorImagen && <p className="text-danger">{errorImagen}</p>}
+              <small className="text-muted">JPG, PNG o WEBP — máx. {TAMANO_MAX_MB} MB</small>
             </div>
           </div>
 
@@ -326,6 +544,48 @@ function MiEmpresa() {
           )}
         </div>
 
+        {/* Sección: blog */}
+        <div className="me-seccion">
+          <div className="me-seccion-header">
+            <h2><Newspaper size={18} /> Blog</h2>
+            <button className="me-btn-primary" onClick={abrirAgregarBlog}>+ Nueva entrada</button>
+          </div>
+
+          {blogs.length === 0 ? (
+            <div className="me-promos-empty">
+              <Newspaper size={24} />
+              <p>Aún no has publicado entradas de blog.</p>
+              <p>Comparte consejos y novedades con tus clientes.</p>
+            </div>
+          ) : (
+            <div className="me-blog-lista">
+              {blogs.map(blog => (
+                <div className="me-blog-card" key={blog.idBlog}>
+                  <div className="me-blog-card-img">
+                    {blog.imagen
+                      ? <img src={`${BASE_URL}${blog.imagen}`} alt={blog.titulo} />
+                      : <Newspaper size={28} />
+                    }
+                  </div>
+                  <div className="me-blog-card-info">
+                    <h3>{blog.titulo}</h3>
+                    {blog.fecha && (
+                      <small className="text-muted">
+                        {new Date(blog.fecha).toLocaleDateString('es-CL', { day: '2-digit', month: 'short', year: 'numeric' })}
+                      </small>
+                    )}
+                    <p>{blog.texto}</p>
+                  </div>
+                  <div className="me-promo-actions">
+                    <button className="me-promo-btn-edit" onClick={() => abrirEditarBlog(blog)}><Pencil size={14} /> Editar</button>
+                    <button className="me-promo-btn-delete" onClick={() => eliminarBlog(blog.idBlog)}><Trash2 size={14} /> Eliminar</button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
       </div>
 
       {/* Modal promoción */}
@@ -381,6 +641,78 @@ function MiEmpresa() {
           <Button variant="secondary" onClick={() => setShowModal(false)}>Cancelar</Button>
           <Button style={{ backgroundColor: '#7e6492', border: 'none' }} onClick={guardarPromo} disabled={guardandoPromo}>
             {guardandoPromo ? 'Guardando...' : editandoPromoId ? 'Guardar cambios' : 'Agregar promoción'}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Modal entrada de blog */}
+      <Modal show={showModalBlog} onHide={() => setShowModalBlog(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title>{editandoBlogId ? 'Editar entrada de blog' : 'Nueva entrada de blog'}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form>
+            <Form.Group className="mb-3">
+              <Form.Label>Imagen de portada</Form.Label>
+              <div className="me-logo">
+                <img
+                  className="me-logo-img"
+                  src={imagenPreviewBlog || (imagenActualBlog ? `${BASE_URL}${imagenActualBlog}` : '/img/placeholder-empresa.png')}
+                  alt="Portada de la entrada"
+                />
+                <div className="me-logo-controles">
+                  <label className="me-btn-secondary" htmlFor="me-input-imagen-blog">
+                    <ImageIcon size={16} /> Elegir imagen
+                  </label>
+                  <input
+                    id="me-input-imagen-blog"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp"
+                    onChange={seleccionarImagenBlog}
+                    style={{ display: 'none' }}
+                  />
+                  {archivoImagenBlog && (
+                    <button type="button" className="me-btn-secondary" onClick={limpiarSeleccionImagenBlog}>
+                      Cancelar
+                    </button>
+                  )}
+                  {errorImagenBlog && <p className="text-danger">{errorImagenBlog}</p>}
+                  <small className="text-muted">
+                    JPG, PNG o WEBP — máx. {TAMANO_MAX_MB} MB. Se sube al guardar la entrada.
+                  </small>
+                </div>
+              </div>
+            </Form.Group>
+
+            <Form.Group className="mb-3">
+              <Form.Label>Título <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                isInvalid={!!errBlog.titulo}
+                value={formBlog.titulo}
+                placeholder="Ej: 5 consejos para el cuidado de tu mascota en invierno"
+                onChange={e => { setFormBlog(p => ({ ...p, titulo: e.target.value })); setErrBlog(p => ({ ...p, titulo: '' })); }}
+              />
+              {errBlog.titulo && <Form.Text className="text-danger">{errBlog.titulo}</Form.Text>}
+            </Form.Group>
+
+            <Form.Group>
+              <Form.Label>Contenido <span className="text-danger">*</span></Form.Label>
+              <Form.Control
+                as="textarea"
+                rows={6}
+                isInvalid={!!errBlog.texto}
+                value={formBlog.texto}
+                placeholder="Escribe el contenido de la publicación..."
+                onChange={e => { setFormBlog(p => ({ ...p, texto: e.target.value })); setErrBlog(p => ({ ...p, texto: '' })); }}
+              />
+              {errBlog.texto && <Form.Text className="text-danger">{errBlog.texto}</Form.Text>}
+            </Form.Group>
+          </Form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModalBlog(false)} disabled={guardandoBlog}>Cancelar</Button>
+          <Button style={{ backgroundColor: '#7e6492', border: 'none' }} onClick={guardarBlog} disabled={guardandoBlog}>
+            {guardandoBlog ? 'Guardando...' : editandoBlogId ? 'Guardar cambios' : 'Publicar entrada'}
           </Button>
         </Modal.Footer>
       </Modal>

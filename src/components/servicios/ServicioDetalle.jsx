@@ -5,6 +5,7 @@ import Footer from '../footer/Footer'
 import { TIPO_COLOR, TIPO_ICON } from './serviciosData'
 import { Store, MapPin, Clock, Phone, MessageCircle, Globe, Camera, User, Tag, PawPrint, Hourglass } from 'lucide-react'
 import api from '../../api/petdate-api'
+import Comentarios from '../comentarios/Comentarios'
 import './ServicioDetalle.css'
 
 function resolverColor(tipoServicio) {
@@ -190,6 +191,11 @@ function ServicioDetalle() {
                 </li>
               )}
             </ul>
+
+            {/* ── Comentarios y calificaciones ── */}
+            <div className="detalle-info__comentarios">
+              <Comentarios tipo="servicio" id={id} color={color} />
+            </div>
           </aside>
 
           {/* ── Panel derecho: promociones ── */}

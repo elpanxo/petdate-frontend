@@ -81,6 +81,76 @@
   background-color: #6a537c;
 }
 
+/* ─────────────────────────────────────────
+   Logo / imagen de la empresa
+   ───────────────────────────────────────── */
+
+.me-logo {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #eee;
+}
+
+.me-logo-img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #7e6492;
+  background-color: #f4f1f7;
+  flex-shrink: 0;
+}
+
+.me-logo-controles {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.me-logo small {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  color: #888;
+}
+
+.me-logo .text-danger {
+  width: 100%;
+  margin: 0.35rem 0 0;
+  font-size: 0.85rem;
+}
+
+/* Botón secundario (Elegir imagen / Cancelar) — complementa a .me-btn-primary */
+.me-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  border: 1px solid #7e6492;
+  background-color: transparent;
+  color: #7e6492;
+  font-weight: 500;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.me-btn-secondary:hover:not(:disabled) {
+  background-color: #7e6492;
+  color: #fff;
+}
+
+.me-btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 /* Grid formulario */
 .me-form-grid {
   display: grid;
@@ -180,6 +250,75 @@
   background: #ffd9d9;
 }
 
+/* ─────────────────────────────────────────
+   Blog
+   ───────────────────────────────────────── */
+
+.me-blog-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.me-blog-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 18px 20px;
+  border-left: 5px solid #7e6492;
+  flex-wrap: wrap;
+}
+
+.me-blog-card-img {
+  width: 84px;
+  height: 84px;
+  border-radius: 10px;
+  overflow: hidden;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f4f1f7;
+  color: #7e6492;
+}
+
+.me-blog-card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.me-blog-card-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.me-blog-card-info h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 2px;
+}
+
+.me-blog-card-info small {
+  display: block;
+  color: #888;
+  margin-bottom: 6px;
+}
+
+.me-blog-card-info p {
+  margin: 0;
+  color: #666;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 @media (max-width: 640px) {
   .me-form-grid {
     grid-template-columns: 1fr;
@@ -195,5 +334,13 @@
 
   .me-titulo {
     font-size: 1.5rem;
+  }
+}
+
+/* En pantallas chicas, apila la imagen sobre los controles */
+@media (max-width: 480px) {
+  .me-logo {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

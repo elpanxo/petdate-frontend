@@ -17,7 +17,7 @@
 // Configuración base
 // ─────────────────────────────────────────────
 
-const BASE_URL = 'http://localhost:8080'
+export const BASE_URL = 'http://localhost:8080'
 
 const TOKEN_KEY = 'petdate_token'
 
@@ -30,6 +30,26 @@ export const token = {
   set: (t) => localStorage.setItem(TOKEN_KEY, t),
   remove: () => localStorage.removeItem(TOKEN_KEY),
   exists: () => !!localStorage.getItem(TOKEN_KEY),
+
+  /**
+   * Decodifica el payload del JWT guardado (sin validar la firma — solo lectura
+   * local). Útil para obtener `id`/`rol` tras el login sin llamar a endpoints
+   * protegidos para ADMIN como /usuarios/correo/{correo}.
+   * @returns {{ id?: number, rol?: string, sub?: string } | null}
+   */
+  payload() {
+    const t = this.get()
+    if (!t) return null
+    try {
+      const base64 = t.split('.')[1].replace(/-/g, '+').replace(/_/g, '/')
+      const json = decodeURIComponent(
+        atob(base64).split('').map(c => '%' + c.charCodeAt(0).toString(16).padStart(2, '0')).join('')
+      )
+      return JSON.parse(json)
+    } catch {
+      return null
+    }
+  },
 }
 
 // ─────────────────────────────────────────────
@@ -189,6 +209,8 @@ export const auth = {
  * @property {string} contrasena    - 6-100 caracteres (obligatorio)
  * @property {string} [telefono]
  * @property {string} [direccion]
+ * @property {boolean} consentimientoInformado - debe ser `true`; el backend rechaza
+ *           el registro (400) si no se acepta la Política de Privacidad (Ley 19.628)
  */
 
 /**
@@ -405,13 +427,26 @@ export const citas = {
     http.get(`/citas/usuario/${idUsuario}${pageParams(pagination)}`),
 
   /**
-   * Lista las citas de una mascota.
+   * Lista las citas de una mascota. SOLO ADMIN — el gateway devuelve 403 a usuarios
+   * normales. Para que un dueño consulte las citas de su propia mascota, usar
+   * `porUsuarioYMascota`.
    * @param {number} idMascota
    * @param {{ page?, size? }} [pagination]
    * @returns {Promise<SpringPage<CitaMedicaResponse>>}
    */
   porMascota: (idMascota, pagination) =>
     http.get(`/citas/mascota/${idMascota}${pageParams(pagination)}`),
+
+  /**
+   * Lista las citas de una mascota puntual, vistas por su dueño (o por un ADMIN).
+   * Ruta accesible para el propio usuario — valida propiedad en el backend.
+   * @param {number} idUsuario
+   * @param {number} idMascota
+   * @param {{ page?, size? }} [pagination]
+   * @returns {Promise<SpringPage<CitaMedicaResponse>>}
+   */
+  porUsuarioYMascota: (idUsuario, idMascota, pagination) =>
+    http.get(`/citas/usuario/${idUsuario}/mascota/${idMascota}${pageParams(pagination)}`),
 
   /**
    * Lista las citas filtradas por estado.
@@ -551,6 +586,25 @@ export const servicios = {
    * @returns {Promise<null>}
    */
   eliminar: (id) => http.delete(`/servicios/${id}`),
+
+/**
+   * Sube o reemplaza la imagen/logo del servicio (multipart/form-data).
+   * Solo el propio servicio autenticado puede hacerlo (validado en el backend).
+   * @param {number} id
+   * @param {File} archivo
+   * @returns {Promise<ServicioResponse>}
+   */
+  subirImagen: (id, archivo) => {
+    const formData = new FormData()
+    formData.append('imagen', archivo)
+    // OJO: no fijar 'Content-Type' a mano — el navegador agrega el boundary
+    // correcto del multipart automáticamente al usar FormData.
+    return request(`/servicios/${id}/imagen`, {
+      method: 'POST',
+      headers: token.exists() ? { Authorization: `Bearer ${token.get()}` } : {},
+      body: formData,
+    })
+  },
 }
 
 // ─────────────────────────────────────────────
@@ -624,6 +678,215 @@ export const promociones = {
 }
 
 // ─────────────────────────────────────────────
+// 7. BLOGS  →  /blogs
+// ─────────────────────────────────────────────
+
+/**
+ * @typedef {Object} BlogRequest
+ * @property {number} idServicio - obligatorio
+ * @property {string} titulo     - obligatorio
+ * @property {string} texto      - obligatorio
+ */
+
+/**
+ * @typedef {Object} BlogResponse
+ * @property {number} idBlog
+ * @property {number} idServicio
+ * @property {string} titulo
+ * @property {string} fecha   - ISO datetime
+ * @property {string} texto
+ * @property {string} imagen  - URL relativa de la imagen (o null)
+ */
+
+export const blogs = {
+  /**
+   * Crea una entrada de blog (solo cuentas de tipo SERVICIO, para su propio servicio).
+   * @param {BlogRequest} data
+   * @returns {Promise<BlogResponse>}
+   */
+  crear: (data) => http.post('/blogs', data),
+
+  /**
+   * Lista todas las entradas de blog paginadas (público).
+   * @param {{ page?, size?, sort? }} [pagination]
+   * @returns {Promise<SpringPage<BlogResponse>>}
+   */
+  listar: (pagination) => http.get(`/blogs${pageParams(pagination)}`, false),
+
+  /**
+   * Busca una entrada de blog por ID (público).
+   * @param {number} id
+   * @returns {Promise<BlogResponse>}
+   */
+  porId: (id) => http.get(`/blogs/${id}`, false),
+
+  /**
+   * Lista las entradas de blog de un servicio específico (público).
+   * @param {number} idServicio
+   * @param {{ page?, size?, sort? }} [pagination]
+   * @returns {Promise<SpringPage<BlogResponse>>}
+   */
+  porServicio: (idServicio, pagination) =>
+    http.get(`/blogs/servicio/${idServicio}${pageParams(pagination)}`, false),
+
+  /**
+   * Actualiza el título y texto de una entrada de blog (solo el servicio dueño).
+   * @param {number} id
+   * @param {BlogRequest} data
+   * @returns {Promise<BlogResponse>}
+   */
+  actualizar: (id, data) => http.put(`/blogs/${id}`, data),
+
+  /**
+   * Elimina una entrada de blog (solo el servicio dueño).
+   * @param {number} id
+   * @returns {Promise<null>}
+   */
+  eliminar: (id) => http.delete(`/blogs/${id}`),
+
+  /**
+   * Sube o reemplaza la imagen de una entrada de blog (multipart/form-data, solo el servicio dueño).
+   * @param {number} id
+   * @param {File} archivo
+   * @returns {Promise<BlogResponse>}
+   */
+  subirImagen: (id, archivo) => {
+    const formData = new FormData()
+    formData.append('imagen', archivo)
+    // OJO: no fijar 'Content-Type' a mano — el navegador agrega el boundary
+    // correcto del multipart automáticamente al usar FormData.
+    return request(`/blogs/${id}/imagen`, {
+      method: 'POST',
+      headers: token.exists() ? { Authorization: `Bearer ${token.get()}` } : {},
+      body: formData,
+    })
+  },
+}
+
+// ─────────────────────────────────────────────
+// 9. COMENTARIOS  →  /comentarios/blog y /comentarios/servicio
+// ─────────────────────────────────────────────
+
+/**
+ * @typedef {Object} ComentarioRequest
+ * @property {number} idBlog|idServicio - id de la entrada o servicio comentado
+ * @property {string} nombreUsuario     - nombre a mostrar (obligatorio)
+ * @property {string} texto             - máx. 100 caracteres (obligatorio)
+ * @property {number} calificacion      - entero entre 0 y 5 (obligatorio)
+ */
+
+/**
+ * @typedef {Object} ComentarioResponse
+ * @property {number} id
+ * @property {number} idBlog|idServicio
+ * @property {number} idUsuario
+ * @property {string} nombreUsuario
+ * @property {string} texto
+ * @property {number} calificacion
+ * @property {string} fecha - ISO datetime
+ */
+
+export const comentarios = {
+  /** Comentarios y calificaciones de entradas de blog (`/comentarios/blog`). */
+  blog: {
+    /**
+     * Crea un comentario en una entrada de blog (requiere cuenta de usuario).
+     * @param {{ idBlog: number, nombreUsuario: string, texto: string, calificacion: number }} data
+     * @returns {Promise<ComentarioResponse>}
+     */
+    crear: (data) => http.post('/comentarios/blog', data),
+
+    /**
+     * Lista todos los comentarios de blog paginados (público).
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    listar: (pagination) => http.get(`/comentarios/blog${pageParams(pagination)}`, false),
+
+    /** @param {number} id @returns {Promise<ComentarioResponse>} */
+    porId: (id) => http.get(`/comentarios/blog/${id}`, false),
+
+    /**
+     * Comentarios de una entrada de blog específica (público).
+     * @param {number} idBlog
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    porBlog: (idBlog, pagination) =>
+      http.get(`/comentarios/blog/blog/${idBlog}${pageParams(pagination)}`, false),
+
+    /**
+     * Comentarios realizados por un usuario (público).
+     * @param {number} idUsuario
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    porUsuario: (idUsuario, pagination) =>
+      http.get(`/comentarios/blog/usuario/${idUsuario}${pageParams(pagination)}`, false),
+
+    /**
+     * Actualiza un comentario propio.
+     * @param {number} id
+     * @param {{ idBlog: number, nombreUsuario: string, texto: string, calificacion: number }} data
+     * @returns {Promise<ComentarioResponse>}
+     */
+    actualizar: (id, data) => http.put(`/comentarios/blog/${id}`, data),
+
+    /** Elimina un comentario propio. @param {number} id @returns {Promise<null>} */
+    eliminar: (id) => http.delete(`/comentarios/blog/${id}`),
+  },
+
+  /** Comentarios y calificaciones de servicios (`/comentarios/servicio`). */
+  servicio: {
+    /**
+     * Crea un comentario sobre un servicio (requiere cuenta de usuario).
+     * @param {{ idServicio: number, nombreUsuario: string, texto: string, calificacion: number }} data
+     * @returns {Promise<ComentarioResponse>}
+     */
+    crear: (data) => http.post('/comentarios/servicio', data),
+
+    /**
+     * Lista todos los comentarios de servicio paginados (público).
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    listar: (pagination) => http.get(`/comentarios/servicio${pageParams(pagination)}`, false),
+
+    /** @param {number} id @returns {Promise<ComentarioResponse>} */
+    porId: (id) => http.get(`/comentarios/servicio/${id}`, false),
+
+    /**
+     * Comentarios de un servicio específico (público).
+     * @param {number} idServicio
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    porServicio: (idServicio, pagination) =>
+      http.get(`/comentarios/servicio/servicio/${idServicio}${pageParams(pagination)}`, false),
+
+    /**
+     * Comentarios realizados por un usuario (público).
+     * @param {number} idUsuario
+     * @param {{ page?, size?, sort? }} [pagination]
+     * @returns {Promise<SpringPage<ComentarioResponse>>}
+     */
+    porUsuario: (idUsuario, pagination) =>
+      http.get(`/comentarios/servicio/usuario/${idUsuario}${pageParams(pagination)}`, false),
+
+    /**
+     * Actualiza un comentario propio.
+     * @param {number} id
+     * @param {{ idServicio: number, nombreUsuario: string, texto: string, calificacion: number }} data
+     * @returns {Promise<ComentarioResponse>}
+     */
+    actualizar: (id, data) => http.put(`/comentarios/servicio/${id}`, data),
+
+    /** Elimina un comentario propio. @param {number} id @returns {Promise<null>} */
+    eliminar: (id) => http.delete(`/comentarios/servicio/${id}`),
+  },
+}
+
+// ─────────────────────────────────────────────
 // Export default (objeto unificado)
 // ─────────────────────────────────────────────
 
@@ -666,6 +929,8 @@ const api = {
   citas,
   servicios,
   promociones,
+  blogs,
+  comentarios,
 }
 
 export default api

@@ -11,6 +11,7 @@ import MisMascotas from './components/misMascotas/MisMascotas'
 import MascotaDetalle from './components/misMascotas/MascotaDetalle'
 import LoginEmpresa from './components/login/LoginEmpresa'
 import MiEmpresa from './components/miEmpresa/MiEmpresa'
+import PoliticaPrivacidad from './components/politicaPrivacidad/PoliticaPrivacidad'
 import './App.css'
 
 // AQUI ESTA LAS RUTAS DE LA APP, HACIA DONDE SE REDIRIGE
@@ -29,6 +30,7 @@ function App() {
       <Route path="/mis-mascotas/:id" element={<MascotaDetalle />} />
       <Route path="/login-empresa" element={<LoginEmpresa />} />
       <Route path="/mi-empresa" element={<MiEmpresa />} />
+      <Route path="/politica-privacidad" element={<PoliticaPrivacidad />} />
       <Route path="/" element={<Home />} />
     </Routes>
   )

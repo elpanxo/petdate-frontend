@@ -143,6 +143,16 @@
   color: #1da851;
 }
 
+/* Comentarios y calificaciones */
+.detalle-info__comentarios {
+  padding: 0 28px 28px;
+}
+
+.detalle-info__comentarios .cm-wrap {
+  margin-top: 0;
+  padding-top: 24px;
+}
+
 /* ── Panel derecho: promociones ── */
 .detalle-promos {
   background: #fff;
